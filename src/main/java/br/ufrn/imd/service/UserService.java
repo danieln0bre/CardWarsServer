@@ -7,6 +7,7 @@ import br.ufrn.imd.repository.ManagerRepository;
 import br.ufrn.imd.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -61,12 +62,30 @@ public class UserService {
         if (usernameExists(player.getUsername()) || emailExists(player.getEmail())) {
             throw new IllegalArgumentException("Username or email already exists.");
         }
+        if (!StringUtils.hasText(player.getName())) {
+            throw new IllegalArgumentException("Player name cannot be empty.");
+        }
+        if (player.getEmail() != null && !isValidEmail(player.getEmail())) {
+            throw new IllegalArgumentException("Invalid email format.");
+        }
+        if (!StringUtils.hasText(player.getPassword())) {
+            throw new IllegalArgumentException("Player password cannot be empty.");
+        }
         return playerRepository.save(player);
     }
 
     public Manager saveManager(Manager manager) {
         if (usernameExists(manager.getUsername()) || emailExists(manager.getEmail())) {
             throw new IllegalArgumentException("Username or email already exists.");
+        }
+        if (!StringUtils.hasText(manager.getName())) {
+            throw new IllegalArgumentException("Manager name cannot be empty.");
+        }
+        if (manager.getEmail() != null && !isValidEmail(manager.getEmail())) {
+            throw new IllegalArgumentException("Invalid email format.");
+        }
+        if (!StringUtils.hasText(manager.getPassword())) {
+            throw new IllegalArgumentException("Manager password cannot be empty.");
         }
         return managerRepository.save(manager);
     }
@@ -86,5 +105,9 @@ public class UserService {
 
     private boolean emailExists(String email) {
         return playerRepository.findByEmail(email).isPresent() || managerRepository.findByEmail(email).isPresent();
+    }
+    
+    private boolean isValidEmail(String email) {
+        return email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}");
     }
 }
