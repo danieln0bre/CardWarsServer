@@ -22,7 +22,7 @@ public class UserService {
 
 
     @Autowired
-    public UserService(PlayerRepository playerRepository, ManagerRepository managerRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public UserService(PlayerRepository playerRepository, ManagerRepository managerRepository) {
         this.playerRepository = playerRepository;
         this.managerRepository = managerRepository;
     }
@@ -30,13 +30,13 @@ public class UserService {
     public Optional<User> getUserByUsername(String username) {
         Optional<Player> player = playerRepository.findByUsername(username);
         if (player.isPresent()) {
-            System.out.println("Found player: " + player.get().getUsername());
+            //COMMENT System.out.println("Found player: " + player.get().getUsername());
             return Optional.of(player.get());
         }
 
         Optional<Manager> manager = managerRepository.findByUsername(username);
         if (manager.isPresent()) {
-            System.out.println("Found manager: " + manager.get().getUsername());
+            //COMMENT System.out.println("Found manager: " + manager.get().getUsername());
             return Optional.of(manager.get());
         }
 

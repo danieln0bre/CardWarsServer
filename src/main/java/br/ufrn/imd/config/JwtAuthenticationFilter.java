@@ -3,6 +3,8 @@ package br.ufrn.imd.config;
 import br.ufrn.imd.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +26,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
@@ -32,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HandlerExceptionResolver handlerExceptionResolver
     ) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
         this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
@@ -51,12 +54,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
-            final String userEmail = jwtService.extractUsername(jwt);
+            final String username = jwtService.extractUsername(jwt);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (userEmail != null && authentication == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            if (username != null && authentication == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

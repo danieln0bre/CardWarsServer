@@ -3,30 +3,28 @@ package br.ufrn.imd.service;
 import br.ufrn.imd.dto.LoginUserDto;
 import br.ufrn.imd.model.User;
 import br.ufrn.imd.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthenticationService(UserService userService, AuthenticationManager authenticationManager) {
+        this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
 
     public User authenticate(LoginUserDto input) {
-        System.out.println(input.getEmail());
-        var email = input.getEmail();
+        System.out.println(input.getUsername());
+        var email = input.getUsername();
         var password = input.getPassword();
 
         try {
@@ -37,17 +35,17 @@ public class AuthenticationService {
             );
 
         } catch (AuthenticationException e) {
-            System.out.println(input.getEmail());
-            System.out.println(input.getPassword());
+            //COMMENT System.out.println(input.getUsername());
+            //COMMENT System.out.println(input.getPassword());
             System.out.println("Authentication error: " + e.getMessage());
             throw new RuntimeException("Invalid login credentials");
         }
 
-        System.out.println(input.getPassword());
-        System.out.println(input.getEmail());
+        //COMMENT System.out.println(input.getPassword());
+        //COMMENT System.out.println(input.getUsername());
 
 
-        return userRepository.findByEmail(input.getEmail())
+        return userService.getUserByUsername(input.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 

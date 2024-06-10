@@ -5,10 +5,13 @@ import br.ufrn.imd.model.Manager;
 import br.ufrn.imd.model.Player;
 import br.ufrn.imd.model.User;
 import br.ufrn.imd.service.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +23,8 @@ public class UserController {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
 
     private final JwtService jwtService;
@@ -35,11 +39,11 @@ public class UserController {
     @PostMapping("/register/player")
     public ResponseEntity<?> registerPlayer(@RequestBody Player player) {
         try {
-            System.out.println("teste");
+            //COMMENT System.out.println("teste");
+            player.setPassword(passwordEncoder.encode(player.getPassword()));
             Player savedPlayer = userService.savePlayer(player);
 
-
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(player.getUsername());
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedPlayer.getUsername());
 
             final String jwt = jwtService.generateToken(userDetails);
 
