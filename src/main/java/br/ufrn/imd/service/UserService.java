@@ -6,6 +6,8 @@ import br.ufrn.imd.model.User;
 import br.ufrn.imd.repository.ManagerRepository;
 import br.ufrn.imd.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +19,8 @@ public class UserService {
     private final PlayerRepository playerRepository;
     private final ManagerRepository managerRepository;
 
+
+
     @Autowired
     public UserService(PlayerRepository playerRepository, ManagerRepository managerRepository) {
         this.playerRepository = playerRepository;
@@ -26,13 +30,13 @@ public class UserService {
     public Optional<User> getUserByUsername(String username) {
         Optional<Player> player = playerRepository.findByUsername(username);
         if (player.isPresent()) {
-            System.out.println("Found player: " + player.get().getUsername());
+            //COMMENT System.out.println("Found player: " + player.get().getUsername());
             return Optional.of(player.get());
         }
 
         Optional<Manager> manager = managerRepository.findByUsername(username);
         if (manager.isPresent()) {
-            System.out.println("Found manager: " + manager.get().getUsername());
+            //COMMENT System.out.println("Found manager: " + manager.get().getUsername());
             return Optional.of(manager.get());
         }
 
@@ -89,6 +93,9 @@ public class UserService {
         }
         return managerRepository.save(manager);
     }
+
+
+
 
     public Optional<User> getUserById(String id, String userType) {
         if ("player".equalsIgnoreCase(userType)) {
