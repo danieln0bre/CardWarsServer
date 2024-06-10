@@ -6,6 +6,8 @@ import br.ufrn.imd.model.User;
 import br.ufrn.imd.repository.ManagerRepository;
 import br.ufrn.imd.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,8 +19,10 @@ public class UserService {
     private final PlayerRepository playerRepository;
     private final ManagerRepository managerRepository;
 
+
+
     @Autowired
-    public UserService(PlayerRepository playerRepository, ManagerRepository managerRepository) {
+    public UserService(PlayerRepository playerRepository, ManagerRepository managerRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.playerRepository = playerRepository;
         this.managerRepository = managerRepository;
     }
@@ -89,6 +93,9 @@ public class UserService {
         }
         return managerRepository.save(manager);
     }
+
+
+
 
     public Optional<User> getUserById(String id, String userType) {
         if ("player".equalsIgnoreCase(userType)) {

@@ -2,12 +2,14 @@ package br.ufrn.imd.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Represents a user in the system, serving as a base class for more specific types of users
  * like Player and Manager. It handles common user attributes.
  */
-public abstract class User {
+
+public abstract class User implements UserDetails {
 
     @Id
     private String id;  // MongoDB primary key for User objects

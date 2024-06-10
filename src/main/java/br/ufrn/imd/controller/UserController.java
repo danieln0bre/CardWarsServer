@@ -1,12 +1,14 @@
 package br.ufrn.imd.controller;
 
+import br.ufrn.imd.auth.AuthenticationResponse;
 import br.ufrn.imd.model.Manager;
 import br.ufrn.imd.model.Player;
 import br.ufrn.imd.model.User;
-import br.ufrn.imd.service.ManagerService;
-import br.ufrn.imd.service.UserService;
+import br.ufrn.imd.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,30 +18,63 @@ public class UserController {
     private final UserService userService;
     private final ManagerService managerService;
 
-    public UserController(UserService userService, ManagerService managerService) {
+    private final UserDetailsServiceImpl userDetailsService;
+
+
+
+
+    private final JwtService jwtService;
+
+    public UserController(UserService userService, ManagerService managerService, UserDetailsServiceImpl userDetailsService, UserDetailsServiceImpl userDetailsService1, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userService = userService;
         this.managerService = managerService;
+        this.userDetailsService = userDetailsService1;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register/player")
     public ResponseEntity<?> registerPlayer(@RequestBody Player player) {
         try {
+            System.out.println("teste");
             Player savedPlayer = userService.savePlayer(player);
-            return ResponseEntity.ok(savedPlayer);
+
+
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(player.getUsername());
+
+            final String jwt = jwtService.generateToken(userDetails);
+
+            System.out.println(jwt);
+            AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwt);
+            return ResponseEntity.ok(authenticationResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao registrar o jogador");
         }
     }
 
     @PostMapping("/register/manager")
     public ResponseEntity<?> registerManager(@RequestBody Manager manager) {
         try {
+            System.out.println("teste");
             Manager savedManager = userService.saveManager(manager);
-            return ResponseEntity.ok(savedManager);
+
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(manager.getUsername());
+
+            final String jwt = jwtService.generateToken(userDetails);
+
+            System.out.println(jwt);
+            AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwt);
+            return ResponseEntity.ok(authenticationResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao registrar o jogador");
         }
     }
+
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id, @RequestParam String userType) {
