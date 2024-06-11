@@ -60,10 +60,11 @@ public class UserController {
     @PostMapping("/register/manager")
     public ResponseEntity<?> registerManager(@RequestBody Manager manager) {
         try {
-            System.out.println("teste");
+            //COMMENT System.out.println("teste");
+            manager.setPassword(passwordEncoder.encode(manager.getPassword()));
             Manager savedManager = userService.saveManager(manager);
 
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(manager.getUsername());
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedManager.getUsername());
 
             final String jwt = jwtService.generateToken(userDetails);
 
