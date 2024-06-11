@@ -2,9 +2,12 @@ package br.ufrn.imd.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 
 /**
@@ -55,7 +58,9 @@ public class Manager extends User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(getRole().toString()));
+        return authorities;
     }
 
     @Override
