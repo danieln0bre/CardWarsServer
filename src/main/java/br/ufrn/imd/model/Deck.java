@@ -17,6 +17,8 @@ public class Deck {
 
     @Field("deck_name")
     private String deckName;
+    
+    private String deckList;
 
     @Field("position_frequencies")
     private Map<Integer, Integer> positionFrequencies;
@@ -63,4 +65,12 @@ public class Deck {
     public void setPositionFrequencies(Map<Integer, Integer> positionFrequencies) {
         this.positionFrequencies = new HashMap<>(positionFrequencies);
     }
+
+	public String getDeckList() {
+		return deckList;
+	}
+
+	public void setDeckList(String deckList) {
+		this.deckList = deckList;
+	}
 }

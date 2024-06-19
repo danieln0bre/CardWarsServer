@@ -5,10 +5,15 @@ import br.ufrn.imd.model.Event;
 import br.ufrn.imd.model.Player;
 import br.ufrn.imd.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -156,5 +161,35 @@ public class PlayerController {
     public ResponseEntity<List<Deck>> getWinningDecks() {
         List<Deck> decks = deckService.getAllWinningDecks();
         return ResponseEntity.ok(decks);
+    }
+
+    @PostMapping("/{id}/registerDeck")
+    public ResponseEntity<String> registerDeck(@PathVariable String id, @RequestParam String deckName, @RequestParam String deckList) {
+        return playerService.getPlayerById(id)
+                .map(player -> {
+                    try {
+                        // Validate if all card codes exist
+                        String[] cardCodes = StringUtils.commaDelimitedListToStringArray(deckList);
+                        for (String cardCode : cardCodes) {
+                            if (!deckService.cardExists(cardCode)) {
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid card code: " + cardCode);
+                            }
+                        }
+
+                        // Create and save the deck
+                        Deck deck = new Deck(deckName, new HashMap<>());
+                        deck.setDeckList(deckList);
+                        deckService.saveDeck(deck);
+
+                        // Update player with new deck
+                        player.setDeckId(deck.getId());
+                        playerService.savePlayer(player);
+
+                        return ResponseEntity.status(HttpStatus.CREATED).body("Deck registered successfully");
+                    } catch (IOException e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the deck");
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }

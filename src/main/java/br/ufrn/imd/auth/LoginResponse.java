@@ -20,4 +20,12 @@ public class LoginResponse {
         this.expiresIn = expiresIn;
         return this;
     }
+
+	public String getToken() {
+		return token;
+	}
+
+	public long getExpiresIn() {
+		return expiresIn;
+	}
 }
