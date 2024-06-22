@@ -6,11 +6,8 @@ import br.ufrn.imd.model.User;
 import br.ufrn.imd.repository.ManagerRepository;
 import br.ufrn.imd.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.Optional;
 
 @Service
@@ -18,8 +15,6 @@ public class UserService {
 
     private final PlayerRepository playerRepository;
     private final ManagerRepository managerRepository;
-
-
 
     @Autowired
     public UserService(PlayerRepository playerRepository, ManagerRepository managerRepository) {
@@ -30,17 +25,14 @@ public class UserService {
     public Optional<User> getUserByUsername(String username) {
         Optional<Player> player = playerRepository.findByUsername(username);
         if (player.isPresent()) {
-            //COMMENT System.out.println("Found player: " + player.get().getUsername());
             return Optional.of(player.get());
         }
 
         Optional<Manager> manager = managerRepository.findByUsername(username);
         if (manager.isPresent()) {
-            //COMMENT System.out.println("Found manager: " + manager.get().getUsername());
             return Optional.of(manager.get());
         }
 
-        System.out.println("User not found with username: " + username);
         return Optional.empty();
     }
     
@@ -94,9 +86,6 @@ public class UserService {
         return managerRepository.save(manager);
     }
 
-
-
-
     public Optional<User> getUserById(String id, String userType) {
         if ("player".equalsIgnoreCase(userType)) {
             return playerRepository.findById(id).map(player -> (User) player);
@@ -113,7 +102,7 @@ public class UserService {
     private boolean emailExists(String email) {
         return playerRepository.findByEmail(email).isPresent() || managerRepository.findByEmail(email).isPresent();
     }
-    
+
     private boolean isValidEmail(String email) {
         return email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}");
     }

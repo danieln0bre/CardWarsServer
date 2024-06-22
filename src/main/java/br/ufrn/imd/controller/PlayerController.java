@@ -24,21 +24,23 @@ import java.util.stream.Collectors;
 public class PlayerController {
 
     // Service dependencies for various player-related operations.
-    private final GeneralRankingService generalRankingService;
+    private final RankingService rankingService;
     private final PlayerService playerService;
     private final EventService eventService;
     private final PlayerWinrateService winrateService;
     private final DeckService deckService;
+    private final CardService cardService;
 
     // Autowired constructor for dependency injection.
     @Autowired
-    public PlayerController(GeneralRankingService generalRankingService, PlayerService playerService,
-                            EventService eventService, PlayerWinrateService winrateService, DeckService deckService) {
-        this.generalRankingService = generalRankingService;
+    public PlayerController(RankingService rankingService, PlayerService playerService,
+                            EventService eventService, PlayerWinrateService winrateService, DeckService deckService, CardService cardService) {
+        this.rankingService = rankingService;
         this.playerService = playerService;
         this.eventService = eventService;
         this.winrateService = winrateService;
         this.deckService = deckService;
+        this.cardService = cardService;
     }
 
     // Updates a player's information.
@@ -90,7 +92,7 @@ public class PlayerController {
                         .orElseThrow(() -> new RuntimeException("Event not found for ID: " + eventId)))
                 .collect(Collectors.toList());
     }
-
+    
     @PutMapping("/{id}/events/add")
     public ResponseEntity<String> addEventToPlayer(@PathVariable String id, @RequestBody String eventId) {
         System.out.println("Request received to add event with ID: " + eventId + " to player with ID: " + id);
@@ -98,9 +100,8 @@ public class PlayerController {
                 .map(event -> {
                     System.out.println("Event found: " + event);
                     try {
-                    checkAndAddEventToPlayer(id, event);
-                    }
-                    catch (IllegalArgumentException e) {
+                        checkAndAddEventToPlayer(id, event);
+                    } catch (IllegalArgumentException e) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
                     } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao registrar o evento");
@@ -128,7 +129,7 @@ public class PlayerController {
     // Retrieves the general rankings of players.
     @GetMapping("/rankings")
     public ResponseEntity<List<Player>> getGeneralRankings() {
-        List<Player> rankedPlayers = generalRankingService.getRankedPlayersByRankPoints();
+        List<Player> rankedPlayers = rankingService.getRankedPlayersByRankPoints();
         return rankedPlayers.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(rankedPlayers);
     }
 
@@ -171,7 +172,7 @@ public class PlayerController {
                         // Validate if all card codes exist
                         String[] cardCodes = StringUtils.commaDelimitedListToStringArray(deckList);
                         for (String cardCode : cardCodes) {
-                            if (!deckService.cardExists(cardCode)) {
+                            if (!cardService.cardExists(cardCode)) {
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid card code: " + cardCode);
                             }
                         }

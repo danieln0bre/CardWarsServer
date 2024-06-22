@@ -4,20 +4,22 @@ import br.ufrn.imd.model.EventResult;
 import br.ufrn.imd.model.Pairing;
 import br.ufrn.imd.model.Player;
 import br.ufrn.imd.model.PlayerResult;
-import br.ufrn.imd.repository.DeckRepository;
 import br.ufrn.imd.repository.PlayerRepository;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import br.ufrn.imd.repository.DeckRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class MatchService {
 
-	private final DeckRepository deckRepository;
+    private final DeckRepository deckRepository;
     private final PlayerRepository playerRepository;
     private final Map<String, Map<String, Integer[]>> deckMatchups = new HashMap<>();
     private Map<String, Map<String, Map<String, Integer[]>>> eventDeckMatchups;
@@ -29,10 +31,6 @@ public class MatchService {
         this.eventDeckMatchups = new HashMap<>();
     }
 
-    /**
-     * Updates the match result based on the provided pairing.
-     * @param pairing The pairing information including player IDs and match result.
-     */
     public void updateMatchResult(Pairing pairing) {
         validatePairing(pairing);
         handleByeMatch(pairing);
@@ -50,7 +48,7 @@ public class MatchService {
 
     public Map<String, Map<String, Double>> getDeckMatchupStatistics(EventResult eventResult) {
         Map<String, Map<String, Integer[]>> deckMatchups = new HashMap<>();
-        
+
         for (PlayerResult playerResult : eventResult.getPlayerResults()) {
             String deckId = playerResult.getDeckId();
             for (String opponentId : playerResult.getOpponentIds()) {
@@ -91,7 +89,7 @@ public class MatchService {
         }
         return null;
     }
-    
+
     public void updateDeckMatchups(String eventId, List<Pairing> pairings) {
         Map<String, Map<String, Integer[]>> deckMatchups = eventDeckMatchups.getOrDefault(eventId, new HashMap<>());
 
@@ -166,8 +164,8 @@ public class MatchService {
         deckMatchups.putIfAbsent(deckOneId, new HashMap<>());
         deckMatchups.putIfAbsent(deckTwoId, new HashMap<>());
 
-        deckMatchups.get(deckOneId).putIfAbsent(deckTwoId, new Integer[] {0, 0});
-        deckMatchups.get(deckTwoId).putIfAbsent(deckOneId, new Integer[] {0, 0});
+        deckMatchups.get(deckOneId).putIfAbsent(deckTwoId, new Integer[]{0, 0});
+        deckMatchups.get(deckTwoId).putIfAbsent(deckOneId, new Integer[]{0, 0});
 
         if (result == 0) {
             deckMatchups.get(deckOneId).get(deckTwoId)[0]++;  // Increment wins for deckOne

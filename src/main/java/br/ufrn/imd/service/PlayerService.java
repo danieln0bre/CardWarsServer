@@ -3,12 +3,10 @@ package br.ufrn.imd.service;
 import br.ufrn.imd.model.Player;
 import br.ufrn.imd.repository.PlayerRepository;
 import br.ufrn.imd.util.PlayerValidationUtil;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlayerService {
@@ -53,36 +51,20 @@ public class PlayerService {
     }
 
     public Player addEventToPlayer(String playerId, String eventId) {
-//        System.out.println("Validating event ID: " + eventId);
         validateId(eventId, "Event ID");
-//        System.out.println("Fetching player by ID: " + playerId);
         Player player = getPlayerById(playerId).orElseThrow(() -> 
             new IllegalArgumentException("Player not found with ID: " + playerId));
         
-//        System.out.println("Player found: " + player);
-//        System.out.println("Player ID: " + player.getId());
-//        if (player.getDeck() != null) {
-//            System.out.println("Player's Deck ID: " + player.getDeck().getId());
-//        } else {
-//            System.out.println("Player has no deck.");
-//        }
-        
-//        System.out.println("Adding event ID: " + eventId + " to player: " + player);
         player.addEventId(eventId);
-//        System.out.println("Player's applied events before save: " + player.getAppliedEventsId());
-
-        Player savedPlayer = playerRepository.save(player);
-//        System.out.println("Player saved: " + savedPlayer);
-//        System.out.println("Player's applied events after save: " + savedPlayer.getAppliedEventsId());
-        return savedPlayer;
+        return playerRepository.save(player);
     }
-    
+
     public boolean allPlayersHaveDecks(List<String> playerIds) {
         validatePlayerIds(playerIds);
         List<Player> players = getPlayersByIds(playerIds);
         return players.stream().allMatch(Player::hasDeck);
     }
-    
+
     public List<Player> saveAll(List<Player> players) {
         validatePlayerIdsList(players);
         return playerRepository.saveAll(players);
@@ -105,14 +87,14 @@ public class PlayerService {
             throw new IllegalArgumentException("The list of players cannot be empty.");
         }
     }
-    
+
     public Player recalculateWinrates(String playerId) {
         Player player = getPlayerById(playerId).orElseThrow(() -> 
             new IllegalArgumentException("Player not found with ID: " + playerId));
         player = winrateService.calculateWinRates(player);
         return savePlayer(player);
     }
-    
+
     public Player savePlayer(Player player) {
         return playerRepository.save(player);
     }
