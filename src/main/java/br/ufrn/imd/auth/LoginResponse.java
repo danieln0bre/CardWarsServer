@@ -1,11 +1,7 @@
 package br.ufrn.imd.auth;
 
-import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class LoginResponse {
 
     private String token;
@@ -21,11 +17,11 @@ public class LoginResponse {
         return this;
     }
 
-	public String getToken() {
-		return token;
-	}
+    public long getExpiresIn() {
+        return expiresIn;
+    }
 
-	public long getExpiresIn() {
-		return expiresIn;
-	}
+    public String getToken() {
+        return token;
+    }
 }

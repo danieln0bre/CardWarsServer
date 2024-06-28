@@ -53,13 +53,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
-            final String username = jwtService.extractUsername(jwt);
+            final String email = jwtService.extractUsername(jwt);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (username != null && authentication == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                System.out.println("username : " + userDetails.getUsername());
+            if (email != null && authentication == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                System.out.println("email : " + userDetails.getUsername());
                 System.out.println("autoridades : " + userDetails.getAuthorities());
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {

@@ -1,8 +1,6 @@
 package br.ufrn.imd.config;
 
 import br.ufrn.imd.service.UserService;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,19 +14,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-	@Autowired
+    @Autowired
     private final UserService userService;
-	
-	public ApplicationConfig(UserService userService) {
-		this.userService = userService;
-	}
+
+    public ApplicationConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> (UserDetails) userService.getUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found" + username));
+        return email -> (UserDetails) userService.getUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found" + email));
     }
 
 

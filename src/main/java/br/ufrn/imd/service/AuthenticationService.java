@@ -23,8 +23,8 @@ public class AuthenticationService {
     }
 
     public User authenticate(LoginUserDto input) {
-        System.out.println(input.getUsername());
-        var email = input.getUsername();
+        System.out.println(input.getEmail());
+        var email = input.getEmail();
         var password = input.getPassword();
 
         try {
@@ -45,10 +45,15 @@ public class AuthenticationService {
         //COMMENT System.out.println(input.getUsername());
 
 
-        return userService.getUserByUsername(input.getUsername())
+        return userService.getUserByEmail(input.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public AuthenticationManager getAuthenticationManager() {
+        return authenticationManager;
+    }
 
-
+    public UserService getUserService() {
+        return userService;
+    }
 }

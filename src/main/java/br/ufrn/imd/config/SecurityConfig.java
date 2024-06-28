@@ -17,17 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	
-	@Autowired
+    @Autowired
     private final JwtAuthenticationFilter jwtAuthFilter;
-	@Autowired
+
+    @Autowired
     private final AuthenticationProvider authenticationProvider;
-    
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
-    	this.jwtAuthFilter = jwtAuthFilter;
-    	this.authenticationProvider = authenticationProvider;
-    }
-    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -46,6 +40,8 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+
 
         return http.build();
     }
