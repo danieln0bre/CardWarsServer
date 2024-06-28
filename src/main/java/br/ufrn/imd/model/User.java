@@ -18,6 +18,11 @@ public abstract class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private String phone;
+    private String image;
+    private String nickname;
+    private String address;
+
     @Field("role")
     private Role role;
 
@@ -35,6 +40,19 @@ public abstract class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;  // Set the role here
+    }
+
+    public User(String address, String email, String id, String image, String name, String nickname, String password, String phone, Role role, String username) {
+        this.address = address;
+        this.email = email;
+        this.id = id;
+        this.image = image;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.phone = phone;
+        this.role = role;
+        this.username = username;
     }
 
     // Accessor methods
@@ -88,5 +106,37 @@ public abstract class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
