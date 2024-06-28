@@ -43,7 +43,7 @@ public class UserController {
             player.setPassword(passwordEncoder.encode(player.getPassword()));
             Player savedPlayer = userService.savePlayer(player);
 
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedPlayer.getUsername());
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedPlayer.getEmail());
 
             final String jwt = jwtService.generateToken(userDetails);
 
@@ -64,7 +64,7 @@ public class UserController {
             manager.setPassword(passwordEncoder.encode(manager.getPassword()));
             Manager savedManager = userService.saveManager(manager);
 
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedManager.getUsername());
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedManager.getEmail());
 
             final String jwt = jwtService.generateToken(userDetails);
 

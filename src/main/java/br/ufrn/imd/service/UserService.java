@@ -27,7 +27,7 @@ public class UserService {
         this.managerRepository = managerRepository;
     }
 
-    public Optional<User> getUserByUsername(String username) {
+    /*public Optional<User> getUserByUsername(String username) {
         Optional<Player> player = playerRepository.findByUsername(username);
         if (player.isPresent()) {
             //COMMENT System.out.println("Found player: " + player.get().getUsername());
@@ -42,15 +42,32 @@ public class UserService {
 
         System.out.println("User not found with username: " + username);
         return Optional.empty();
+    } */
+
+    public Optional<User> getUserByEmail(String email) {
+        Optional<Player> player = playerRepository.findByEmail(email);
+        if (player.isPresent()) {
+            //COMMENT System.out.println("Found player: " + player.get().getUsername());
+            return Optional.of(player.get());
+        }
+
+        Optional<Manager> manager = managerRepository.findByEmail(email);
+        if (manager.isPresent()) {
+            //COMMENT System.out.println("Found manager: " + manager.get().getUsername());
+            return Optional.of(manager.get());
+        }
+
+        System.out.println("User not found with email: " + email);
+        return Optional.empty();
     }
-    
-    public Optional<String> getUserIdByUsername(String username) {
-        Optional<Player> player = playerRepository.findByUsername(username);
+
+    public Optional<String> getUserIdByEmail(String email) {
+        Optional<Player> player = playerRepository.findByEmail(email);
         if (player.isPresent()) {
             return Optional.of(player.get().getId());
         }
 
-        Optional<Manager> manager = managerRepository.findByUsername(username);
+        Optional<Manager> manager = managerRepository.findByEmail(email);
         if (manager.isPresent()) {
             return Optional.of(manager.get().getId());
         }
