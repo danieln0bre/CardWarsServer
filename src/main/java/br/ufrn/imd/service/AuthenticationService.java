@@ -49,6 +49,11 @@ public class AuthenticationService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public AuthenticationManager getAuthenticationManager() {
+        return authenticationManager;
+    }
 
-
+    public UserService getUserService() {
+        return userService;
+    }
 }
