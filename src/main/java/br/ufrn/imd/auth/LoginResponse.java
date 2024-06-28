@@ -1,11 +1,7 @@
 package br.ufrn.imd.auth;
 
-import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class LoginResponse {
 
     private String token;
