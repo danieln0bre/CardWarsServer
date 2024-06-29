@@ -18,6 +18,10 @@ public class Event {
     private String name;
     private String date;
     private String location;
+    private String description;
+    private String rules;
+    private String tags;
+    private String imagePath;
     private int numberOfRounds;
     private int currentRound;
     private boolean hasStarted;
@@ -99,6 +103,38 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getRules() {
+        return rules;
+    }
+
+    public void setRules(String rules) {
+        this.rules = rules;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public int getNumberOfRounds() {
