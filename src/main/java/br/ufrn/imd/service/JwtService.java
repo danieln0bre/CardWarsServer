@@ -50,6 +50,7 @@ public class JwtService {
             long expiration
     ) {
         extraClaims.put("id", userDetails.getId());
+        extraClaims.put("role", userDetails.getRole());
 
         return Jwts
                 .builder()
