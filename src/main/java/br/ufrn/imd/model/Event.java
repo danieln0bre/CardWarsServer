@@ -20,7 +20,7 @@ public class Event {
     private String location;
     private String description;
     private String rules;
-    private ArrayList<String> tags;
+    private List<String> tags;
     private String imagePath;
     private int numberOfParticipants;
     private int numberOfRounds;
@@ -58,24 +58,6 @@ public class Event {
         this.managerId = managerId;
     }
 
-    public Event(String date, String description, String imagePath, String location, String managerId, String name, int numberOfRounds, String rules, ArrayList<String> tags) {
-        this.name = name;
-        this.date = date;
-        this.location = location;
-        this.description = description;
-        this.rules = rules;
-        this.tags = tags;
-        this.imagePath = imagePath;
-        this.numberOfParticipants = 0;
-        this.numberOfRounds = numberOfRounds;
-        this.currentRound = 0;
-        this.finished = false;
-        this.hasStarted = false;
-        this.playerIds = new ArrayList<>();
-        this.pairings = new ArrayList<>();
-        this.managerId = managerId;
-    }
-
     /**
      * Updates event details from another event object.
      * This method copies all properties from the source event into this event.
@@ -86,6 +68,11 @@ public class Event {
         this.name = source.name;
         this.date = source.date;
         this.location = source.location;
+        this.description = source.description;
+        this.rules = source.rules;
+        setTags(new ArrayList<>(source.tags));
+        this.imagePath = source.imagePath;
+        this.numberOfParticipants = source.numberOfParticipants;
         this.numberOfRounds = source.numberOfRounds;
         this.currentRound = source.currentRound;
         this.finished = source.finished;
@@ -130,37 +117,21 @@ public class Event {
         this.location = location;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getImagePath() {
-        return imagePath;
-    }
+    public String getImagePath() { return imagePath; }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
-    public String getRules() {
-        return rules;
-    }
+    public String getRules() { return rules; }
 
-    public void setRules(String rules) {
-        this.rules = rules;
-    }
+    public void setRules(String rules) { this.rules = rules; }
 
-    public ArrayList<String> getTags() {
-        return tags;
-    }
+    public List<String> getTags() { return Collections.unmodifiableList(tags); }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
+    public void setTags(List<String> tags) { this.tags = new ArrayList<>(tags); }
 
     public int getNumberOfRounds() {
         return numberOfRounds;
