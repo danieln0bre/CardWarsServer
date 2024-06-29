@@ -39,17 +39,15 @@ public class UserService {
     public Optional<User> getUserByEmail(String email) {
         Optional<Player> player = playerRepository.findByEmail(email);
         if (player.isPresent()) {
-            //COMMENT System.out.println("Found player: " + player.get().getUsername());
             return Optional.of(player.get());
         }
 
         Optional<Manager> manager = managerRepository.findByEmail(email);
         if (manager.isPresent()) {
-            //COMMENT System.out.println("Found manager: " + manager.get().getUsername());
             return Optional.of(manager.get());
         }
 
-        System.out.println("User not found with email: " + email);
+        System.out.println("USer Service : User not found with email: " + email);
         return Optional.empty();
     }
 
