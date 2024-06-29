@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +41,9 @@ public class UserController {
             //COMMENT System.out.println("teste");
             player.setPassword(passwordEncoder.encode(player.getPassword()));
             Player savedPlayer = userService.savePlayer(player);
-
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedPlayer.getEmail());
+            System.out.println("aaaaaaaaaaaaaaaaaaaa");
+            final User userDetails = (User) userDetailsService.loadUserByUsername(savedPlayer.getEmail());
+            System.out.println("DEU EXCEPTION ACIMA??");
 
             final String jwt = jwtService.generateToken(userDetails);
 
@@ -53,6 +53,7 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao registrar o jogador");
         }
     }
@@ -64,7 +65,7 @@ public class UserController {
             manager.setPassword(passwordEncoder.encode(manager.getPassword()));
             Manager savedManager = userService.saveManager(manager);
 
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(savedManager.getEmail());
+            final User userDetails = (User) userDetailsService.loadUserByUsername(savedManager.getEmail());
 
             final String jwt = jwtService.generateToken(userDetails);
 
@@ -74,6 +75,7 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao registrar o jogador");
         }
     }
