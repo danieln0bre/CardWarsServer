@@ -20,8 +20,9 @@ public class Event {
     private String location;
     private String description;
     private String rules;
-    private String tags;
+    private ArrayList<String> tags;
     private String imagePath;
+    private int numberOfParticipants;
     private int numberOfRounds;
     private int currentRound;
     private boolean hasStarted;
@@ -39,9 +40,33 @@ public class Event {
      * @param numberOfRounds  the total number of rounds in the event
      */
     public Event(String name, String date, String location, int numberOfRounds, String managerId) {
+
         this.name = name;
         this.date = date;
         this.location = location;
+        this.description = "Sem descrição.";
+        this.rules = "Sem regras.";
+        this.tags = new ArrayList<>();
+        this.imagePath = "resources/static.images/P/P-051.png";
+        this.numberOfParticipants = 0;
+        this.numberOfRounds = numberOfRounds;
+        this.currentRound = 0;
+        this.finished = false;
+        this.hasStarted = false;
+        this.playerIds = new ArrayList<>();
+        this.pairings = new ArrayList<>();
+        this.managerId = managerId;
+    }
+
+    public Event(String date, String description, String imagePath, String location, String managerId, String name, int numberOfRounds, String rules, ArrayList<String> tags) {
+        this.name = name;
+        this.date = date;
+        this.location = location;
+        this.description = description;
+        this.rules = rules;
+        this.tags = tags;
+        this.imagePath = imagePath;
+        this.numberOfParticipants = 0;
         this.numberOfRounds = numberOfRounds;
         this.currentRound = 0;
         this.finished = false;
