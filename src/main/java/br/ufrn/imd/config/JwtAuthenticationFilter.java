@@ -1,5 +1,6 @@
 package br.ufrn.imd.config;
 
+import br.ufrn.imd.model.User;
 import br.ufrn.imd.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -58,8 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if (email != null && authentication == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                System.out.println("email : " + userDetails.getUsername());
+                User userDetails = (User) userDetailsService.loadUserByUsername(email);
+                System.out.println("email : " + userDetails.getEmail());
                 System.out.println("autoridades : " + userDetails.getAuthorities());
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
