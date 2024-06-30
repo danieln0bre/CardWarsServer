@@ -38,9 +38,9 @@ public class EventPairingController {
                         return ResponseEntity.badRequest().body("Event has already started.");
                     }
 
-                    if (!playerService.allPlayersHaveDecks(event.getPlayerIds())) {
+                   /* if (!playerService.allPlayersHaveDecks(event.getPlayerIds())) {
                         return ResponseEntity.badRequest().body("Not all players have registered decks.");
-                    }
+                    } */
 
                     event.setHasStarted(true);
                     eventService.saveEvent(event);

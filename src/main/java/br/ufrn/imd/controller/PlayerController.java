@@ -95,21 +95,26 @@ public class PlayerController {
     
     @PutMapping("/{id}/events/add")
     public ResponseEntity<String> addEventToPlayer(@PathVariable String id, @RequestBody String eventId) {
+        eventId = eventId.replaceAll("\"", "");
+
         System.out.println("Request received to add event with ID: " + eventId + " to player with ID: " + id);
+        String finalEventId = eventId;
         return eventService.getEventById(eventId.trim())
                 .map(event -> {
                     System.out.println("Event found: " + event);
                     try {
                         checkAndAddEventToPlayer(id, event);
                     } catch (IllegalArgumentException e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+                        System.out.println(e.getMessage());
+                        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
                     } catch (Exception e) {
+                        System.out.println(e.getMessage());
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao registrar o evento");
                     }
                     return ResponseEntity.ok("Player and Event updated successfully!");
                 })
                 .orElseGet(() -> {
-                    System.out.println("Event not found for ID: " + eventId);
+                    System.out.println("Event not found for ID: " + finalEventId);
                     return ResponseEntity.badRequest().body("Event not found.");
                 });
     }
