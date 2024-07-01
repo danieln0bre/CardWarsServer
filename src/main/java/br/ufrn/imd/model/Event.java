@@ -39,7 +39,7 @@ public class Event {
      * @param location        the location of the event
      * @param numberOfRounds  the total number of rounds in the event
      */
-    public Event(String name, String date, String location, int numberOfRounds, String managerId) {
+    public Event(String name, String date, String location, int numberOfParticipants, int numberOfRounds, String managerId) {
 
         this.name = name;
         this.date = date;
@@ -48,7 +48,7 @@ public class Event {
         this.rules = "Sem regras.";
         this.tags = new ArrayList<>();
         this.imagePath = "https://i.imgur.com/2qaPLsy.png";
-        this.numberOfParticipants = 0;
+        this.numberOfParticipants = numberOfParticipants;
         this.numberOfRounds = numberOfRounds;
         this.currentRound = 0;
         this.finished = false;
@@ -124,6 +124,14 @@ public class Event {
     public String getImagePath() { return imagePath; }
 
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    public int getNumberOfParticipants() {
+        return numberOfParticipants;
+    }
+
+    public void setNumberOfParticipants(int numberOfParticipants) {
+        this.numberOfParticipants = numberOfParticipants;
+    }
 
     public String getRules() { return rules; }
 
