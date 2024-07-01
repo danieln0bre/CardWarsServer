@@ -47,7 +47,7 @@ public class Event {
         this.description = "Sem descrição.";
         this.rules = "Sem regras.";
         this.tags = new ArrayList<>();
-        this.imagePath = "resources/static.images/P/P-051.png";
+        this.imagePath = "https://i.imgur.com/2qaPLsy.png";
         this.numberOfParticipants = 0;
         this.numberOfRounds = numberOfRounds;
         this.currentRound = 0;
