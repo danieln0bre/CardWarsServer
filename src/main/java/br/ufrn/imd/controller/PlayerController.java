@@ -125,6 +125,9 @@ public class PlayerController {
         if (event.getPlayerIds().contains(playerId)) {
             throw new IllegalArgumentException("Player is already registered for this event.");
         }
+        if (event.isFull()) {
+            throw new IllegalArgumentException("Event is capped.");
+        }
         System.out.println("Adding event to player...");
         playerService.addEventToPlayer(playerId, event.getId());
         System.out.println("Adding player to event...");

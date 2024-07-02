@@ -27,6 +27,7 @@ public class Event {
     private int currentRound;
     private boolean hasStarted;
     private boolean finished;
+    private boolean isFull;
     private List<String> playerIds;
     private List<Pairing> pairings;
     private String managerId; 
@@ -53,6 +54,7 @@ public class Event {
         this.currentRound = 0;
         this.finished = false;
         this.hasStarted = false;
+        this.isFull = false;
         this.playerIds = new ArrayList<>();
         this.pairings = new ArrayList<>();
         this.managerId = managerId;
@@ -77,6 +79,7 @@ public class Event {
         this.currentRound = source.currentRound;
         this.finished = source.finished;
         this.hasStarted = source.hasStarted;
+        setFull();
         setPlayerIds(new ArrayList<>(source.playerIds));
         setPairings(new ArrayList<>(source.pairings));
     }
@@ -175,6 +178,14 @@ public class Event {
 
     public boolean getHasStarted() {
         return hasStarted;
+    }
+
+    public boolean isFull() {
+        return numberOfParticipants <= playerIds.size();
+    }
+
+    public void setFull() {
+        this.isFull = numberOfParticipants <= playerIds.size();
     }
 
     public void setHasStarted(boolean hasStarted) {
