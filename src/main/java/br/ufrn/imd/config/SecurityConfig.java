@@ -22,13 +22,18 @@ public class SecurityConfig {
 
     @Autowired
     private final AuthenticationProvider authenticationProvider;
+    
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
+    	this.authenticationProvider = authenticationProvider;
+    	this.jwtAuthFilter = jwtAuthFilter;
+    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .requestMatchers("/auth/login", "/api/users/register/player", "/api/users/register/manager", "/public/**").permitAll()
+                .requestMatchers("/serve-images/**", "/auth/login", "/api/users/register/player", "/api/users/register/manager", "/public/**").permitAll()
                 .requestMatchers("/api/events/createEvent", "/api/events/{id}/update", "/api/events/{id}/delete",
                         "/api/events/{eventId}/finalize", "/api/events/{eventId}/start", "/api/events/{eventId}/generatePairings",
                         "/api/events/{eventId}/finalizeRound").hasRole("MANAGER")

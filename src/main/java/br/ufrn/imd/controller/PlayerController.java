@@ -137,21 +137,6 @@ public class PlayerController {
         List<Player> rankedPlayers = rankingService.getRankedPlayersByRankPoints();
         return rankedPlayers.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(rankedPlayers);
     }
-
-    @PutMapping("/{id}/updateDeck")
-    public ResponseEntity<?> updatePlayerDeck(@PathVariable String id, @RequestBody String deckId) {
-        return playerService.getPlayerById(id)
-                .map(player -> {
-                    Deck deck = deckService.getDeckById(deckId);
-                    if (deck == null) {
-                        return ResponseEntity.badRequest().body("Deck not found");
-                    }
-                    player.setDeckId(deckId);
-                    playerService.savePlayer(player);
-                    return ResponseEntity.ok("Deck updated successfully");
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
     
     @GetMapping("/decks/{deckId}")
     public ResponseEntity<Deck> getDeckById(@PathVariable String deckId) {
@@ -174,6 +159,10 @@ public class PlayerController {
         return playerService.getPlayerById(id)
                 .map(player -> {
                     try {
+                        // Clean deckName and deckList by removing all quotes
+                        String deckNameFixed = deckName.replace("\"", "").replace("'", "");
+                        String deckListFixed = deckList.replace("\"", "").replace("'", "");
+
                         // Validate if all card codes exist
                         String[] cardCodes = StringUtils.commaDelimitedListToStringArray(deckList);
                         for (String cardCode : cardCodes) {
@@ -183,8 +172,8 @@ public class PlayerController {
                         }
 
                         // Create and save the deck
-                        Deck deck = new Deck(deckName, new HashMap<>());
-                        deck.setDeckList(deckList);
+                        Deck deck = new Deck(deckNameFixed, new HashMap<>());
+                        deck.setDeckList(deckListFixed);
                         deckService.saveDeck(deck);
 
                         // Update player with new deck
@@ -198,4 +187,23 @@ public class PlayerController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    
+    @DeleteMapping("/{id}/deleteDeck")
+    public ResponseEntity<String> deleteDeck(@PathVariable String id) {
+        return playerService.getPlayerById(id)
+                .map(player -> {
+                    String deckId = player.getDeckId();
+                    if (deckId != null) {
+                        deckService.deleteDeck(deckId);
+                        player.setDeckId(null);
+                        playerService.savePlayer(player);
+                        return ResponseEntity.ok("Deck deleted successfully");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No deck to delete");
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

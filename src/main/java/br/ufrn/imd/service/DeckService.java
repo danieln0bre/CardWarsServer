@@ -27,4 +27,12 @@ public class DeckService {
     public Deck saveDeck(Deck deck) {
         return deckRepository.save(deck);
     }
+
+    public void deleteDeck(String id) {
+        if (deckRepository.existsById(id)) {
+            deckRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Deck not found");
+        }
+    }
 }
