@@ -134,6 +134,7 @@ public class Event {
 
     public void setNumberOfParticipants(int numberOfParticipants) {
         this.numberOfParticipants = numberOfParticipants;
+        setFull();
     }
 
     public String getRules() { return rules; }
