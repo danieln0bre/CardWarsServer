@@ -22,11 +22,7 @@ public class SecurityConfig {
 
     @Autowired
     private final AuthenticationProvider authenticationProvider;
-    
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
-    	this.authenticationProvider = authenticationProvider;
-    	this.jwtAuthFilter = jwtAuthFilter;
-    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
