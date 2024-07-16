@@ -94,7 +94,7 @@ public class PlayerController {
     }
     
     @PutMapping("/{id}/events/add")
-    public ResponseEntity<String> addEventToPlayer(@PathVariable String id, @RequestBody String eventId) {
+    public synchronized ResponseEntity<String> addEventToPlayer(@PathVariable String id, @RequestBody String eventId) {
         eventId = eventId.replaceAll("\"", "");
 
         System.out.println("Request received to add event with ID: " + eventId + " to player with ID: " + id);
